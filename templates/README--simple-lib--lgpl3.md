@@ -13,6 +13,9 @@ Content
 ##1. What is **@@PROJECT_NAME@@**, and when to use it ?
 **@@PROJECT_NAME@@** does this and that...
 
+### What's new in v@@PROJECT_VERSION@@
+* Some feature
+* ...
 
 ###Licence
  **@@PROJECT_NAME@@** is free software: you can redistribute it and/or modify it under the terms of the
@@ -57,8 +60,8 @@ Add the following dependencies to your project.
 Read the javadoc and look at the test code.
 
 ##4. Known issues
-...
+See the [project issues](https://github.com/sporniket/@@PROJECT_GITHUB@@/issues) page.
 
 ##5. Miscellanous
 ### Report issues
-Use the issue reporting system at the [project page](https://github.com/sporniket/@@PROJECT_GITHUB@@)
+Use the [project issues](https://github.com/sporniket/@@PROJECT_GITHUB@@/issues) page.
