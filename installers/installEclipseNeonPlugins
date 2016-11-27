@@ -1,0 +1,46 @@
+#!/bin/bash
+#
+# Install a selection of plugins on an Eclipse Neon installation.
+# $1 : path to the Eclipse Neon executable.
+
+if [ $# -lt 1 ]; then
+  echo "usage : installEclipseNeonPlugins ECLIPSE_COMMAND"
+  exit 1
+fi
+
+# load macros
+. __utils__log
+logTrace "log utility loaded..."
+. __utils__application
+logTrace "application utility loaded..."
+
+
+if [ ! -e "$1" ]; then
+  logError "Eclipse Neon command not found : '$1'"
+  exit 1
+fi
+
+if [ ! -x "$1" ]; then
+  logError "Eclipse Neon not executable : '$1'"
+  exit 1
+fi
+
+
+
+function installFeatureSet {
+  if [ $# -lt 3 ]; then
+    echo "usage : installFeatureSet ECLIPSE_COMMAND UPDTATE_SITES FEATURES_SET"
+    return 1
+  fi
+
+  $1 -application org.eclipse.equinox.p2.director -noSplash -repository "$2" -installIUs "$3" || return 1
+ 
+}
+
+#ok, here we go
+logInfo "Installing Checkstyle integration ..."
+installFeatureSet "$1" "http://eclipse-cs.sf.net/update" "com.github.sevntu.checkstyle.checks.feature.feature.group" && logOk "Success" || logError "Failed"
+
+logInfo "Installing JBoss application server integration ..."
+installFeatureSet "$1" "http://download.jboss.org/jbosstools/neon/stable/updates/" "org.jboss.ide.eclipse.as.feature.feature.group" && logOk "Success" || logError "Failed."
+
