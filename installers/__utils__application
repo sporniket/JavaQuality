@@ -1,0 +1,49 @@
+#!/bin/bash
+
+# manage an application shortcut
+
+
+
+#** create a *.desktop file in the user application list
+#* $1 : application name, will generate "$1.desktop"
+#* $2 : exec path
+#* $3 : icon path
+#* $4 : short description (optionnal)
+#* $5 : categories (optionnal)
+function createDesktopFile {
+  if [ $# -lt 3 ]; then
+    echo "usage : createDesktopFile APPLICATION_NAME EXEC_PATH ICON_PATH [SHORT_DESCRIPTION] [CATEGORIES]"
+    return 1
+  fi
+  TARGET_FILE="$HOME/.local/share/applications/$1.desktop"
+  
+  if [ ! -e "$TARGET_FILE" ]; then
+    logInfo "Creating desktop file : $TARGET_FILE ..."
+
+    echo "[Desktop Entry]
+Version=1.0
+Name=$1
+Exec=$PATH_INSTALL/eclipse
+Icon=$PATH_INSTALL/icon.xpm
+Type=Application
+Terminal=false
+StartupNotify=true
+" > "$TARGET_FILE"
+
+    if [ $# -ge 4 ]; then
+      echo "Comment=$4" >> "$TARGET_FILE"
+    fi
+
+    if [ $# -ge 5 ]; then
+      echo "Categories=$5" >> "$TARGET_FILE"
+    fi
+
+  fi
+
+  if [ ! -x "$TARGET_FILE" ]; then 
+    chmod u+x "$TARGET_FILE"
+  fi
+
+}
+
+

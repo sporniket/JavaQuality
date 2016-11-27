@@ -1,0 +1,81 @@
+#!/bin/bash
+#
+# Install the eclipse Neon IDE from the specified archive
+# $1 : path to the archive (*.tar.gz file)
+
+if [ $# -lt 1 ]; then
+  echo "usage : installEclipseNeon ARCHIVE_FILE"
+  exit 1
+fi
+
+# load macros
+. __utils__log
+logTrace "log utility loaded..."
+. __utils__application
+logTrace "application utility loaded..."
+
+
+if [ ! -e "$1" ]; then
+  logError "Archive file not found : '$1'"
+  exit 1
+fi
+
+#prepare values
+PATH_ARCHIVE_VANILLA="$1"
+
+PATH_INSTALL_ROOT="$HOME/opt"
+PATH_INSTALL="${PATH_INSTALL_ROOT}/eclipse-neon"
+
+JAVA_EXEC=`which java | head -1`
+
+TIMESTAMP=`date -Iseconds`
+
+PATH_DESKTOP="$HOME/Bureau"
+
+SHORTCUT_NAME="Eclipse Neon"
+SHORTCUT_EXEC="$PATH_INSTALL/eclipse"
+SHORTCUT_ICON="$PATH_INSTALL/icon.xpm"
+SHORTCUT_DESC="Integrated Development Environment for Java and more"
+SHORTCUT_CATE="TextEditor;Development;"
+
+
+#Ok, here we go
+logInfo "Unpack Eclipse Bundle..."
+logTrace "will unpack ${PATH_ARCHIVE_VANILLA} into ${PATH_INSTALL}"
+tar xzf ${PATH_ARCHIVE_VANILLA}
+
+logInfo "Install Eclipse Bundle..."
+if [ ! -e $PATH_INSTALL_ROOT ]; then
+  logTrace "create root install directory"
+  mkdir -p $PATH_INSTALL_ROOT || exit
+fi
+if [ -d $PATH_INSTALL ]; then
+  logTrace "deprecate previous install"
+  mv $PATH_INSTALL ${PATH_INSTALL}.old.$TIMESTAMP
+fi
+mv eclipse $PATH_INSTALL
+
+logTrace "cleanup old installation..."
+rm -Rf "${PATH_INSTALL}.old.*"
+
+logOk "Eclipse Bundle Unpacked."
+
+
+logInfo "Setup eclipse.ini..."
+INIFILE=eclipse.ini
+INIFILE_SAVE=$INIFILE.$TIMESTAMP
+logTrace "specify jvm, delete 'UseStringDeduplication'"
+cat $PATH_INSTALL/$INIFILE | sed -e 's/^-vmargs$/-vm\nXXXXX\n-vmargs/' | sed -e "s,XXXXX,$JAVA_EXEC," | sed -e "s,-XX:+UseStringDeduplication,,"> $PATH_INSTALL/$INIFILE.tmp
+logTrace "backup original eclipse.ini"
+mv $PATH_INSTALL/$INIFILE $PATH_INSTALL/$INIFILE_SAVE
+logTrace "install new eclipse.ini... "
+mv $PATH_INSTALL/$INIFILE.tmp $PATH_INSTALL/$INIFILE
+
+logOk "Eclipse.ini ready."
+
+
+createDesktopFile "Eclipse Neon" "$PATH_INSTALL/eclipse" "$PATH_INSTALL/icon.xpm" "Integrated Development Environment for Java and more" "TextEditor;Development;" || logError "Failed create shortcut."
+
+
+logOk "Eclipse Bundle Ready."
+
