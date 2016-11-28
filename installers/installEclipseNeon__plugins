@@ -38,9 +38,6 @@ function installFeatureSet {
 }
 
 #ok, here we go
-logInfo "Installing Checkstyle integration ..."
-installFeatureSet "$1" "http://eclipse-cs.sf.net/update" "com.github.sevntu.checkstyle.checks.feature.feature.group" && logOk "Success" || logError "Failed"
-
 logInfo "Installing JBoss application server integration ..."
 installFeatureSet "$1" "http://download.jboss.org/jbosstools/neon/stable/updates/" "org.jboss.ide.eclipse.as.feature.feature.group" && logOk "Success" || logError "Failed."
 

@@ -56,7 +56,7 @@ fi
 mv eclipse $PATH_INSTALL
 
 logTrace "cleanup old installation..."
-rm -Rf "${PATH_INSTALL}.old.*"
+rm -Rf ${PATH_INSTALL}.old.*
 
 logOk "Eclipse Bundle Unpacked."
 
@@ -73,8 +73,11 @@ mv $PATH_INSTALL/$INIFILE.tmp $PATH_INSTALL/$INIFILE
 
 logOk "Eclipse.ini ready."
 
+./installEclipseNeon__plugins ${PATH_INSTALL}/eclipse
 
 createDesktopFile "Eclipse Neon" "$PATH_INSTALL/eclipse" "$PATH_INSTALL/icon.xpm" "Integrated Development Environment for Java and more" "TextEditor;Development;" || logError "Failed create shortcut."
+
+addInLauncher "Eclipse Neon"
 
 
 logOk "Eclipse Bundle Ready."

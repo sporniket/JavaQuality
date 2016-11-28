@@ -47,3 +47,28 @@ StartupNotify=true
 }
 
 
+#** Register an existing *.desktop file in the Ubuntu launcher.
+#* $1 : application name, the desktop file is "$1.desktop"
+function addInLauncher {
+  if [ $# -lt 1 ]; then
+    echo "usage : addInLauncher APPLICATION_NAME"
+    echo "  APPLICATION_NAME the name of the desktop file will be 'APPLICATION_NAME.desktop'"
+    return 1
+  fi
+
+  LAUNCHER_FILE="$1.desktop"
+  LAUNCHER_LIST=`gsettings get com.canonical.Unity.Launcher favorites`
+
+  LAUNCHER_GREP=`echo "$LAUNCHER_LIST" | grep -o "$LAUNCHER_FILE" | wc -c`
+
+  if [ 0 -lt "$LAUNCHER_GREP" ]; then
+    logTrace "Already in launcher."
+  else
+    logInfo "Install '$1' in launcher..."
+    logTrace "before : $LAUNCHER_LIST"
+    LAUNCHER_LIST_NEW=`echo $LAUNCHER_LIST | sed -e "s@]@, 'application://${LAUNCHER_FILE}']@"`
+    logTrace "after : $LAUNCHER_LIST_NEW"
+    gsettings set com.canonical.Unity.Launcher favorites "$LAUNCHER_LIST_NEW"
+  fi
+}
+
