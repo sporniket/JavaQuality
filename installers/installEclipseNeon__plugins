@@ -34,10 +34,12 @@ function installFeatureSet {
   fi
 
   $1 -application org.eclipse.equinox.p2.director -noSplash -repository "$2" -installIUs "$3" || return 1
- 
+
 }
 
 #ok, here we go
 logInfo "Installing JBoss application server integration ..."
 installFeatureSet "$1" "http://download.jboss.org/jbosstools/neon/stable/updates/" "org.jboss.ide.eclipse.as.feature.feature.group" && logOk "Success" || logError "Failed."
 
+logInfo "[NOT TESTED] Installing EclEmma - Java Code Coverage For Eclipse ..."
+installFeatureSet "$1" "http://update.eclemma.org/" "org.eclipse.eclemma.feature.feature.group" && logOk "Success" || logError "Failed."
